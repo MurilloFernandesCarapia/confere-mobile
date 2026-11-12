@@ -1,16 +1,14 @@
 {
   "expo": {
-    "name": "confere-mobile",
+    "name": "Confere",
     "slug": "confere-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "conferemobile",
+    "scheme": "confere",
     "userInterfaceStyle": "automatic",
-    "ios": {
-      "icon": "./assets/expo.icon"
-    },
     "android": {
+      "package": "br.fiap.confere.rm564969",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -20,7 +18,6 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "output": "server",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
