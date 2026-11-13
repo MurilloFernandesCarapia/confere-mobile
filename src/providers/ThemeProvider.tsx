@@ -11,6 +11,7 @@ import {
 import { useColorScheme } from "react-native";
 
 import { AppColors, darkColors, lightColors } from "@/constants/Colors";
+import { usePreferencias } from "@/providers/PreferenciasProvider";
 
 export type PreferenciaTema = "claro" | "escuro" | "sistema";
 
@@ -22,14 +23,11 @@ type ThemeContextValue = {
   colors: AppColors;
   tema: Tema;
   preferencia: PreferenciaTema;
-  fonteGrande: boolean;
   tamanho: Tamanho;
   alterarPreferencia: (preferencia: PreferenciaTema) => Promise<void>;
-  alterarFonteGrande: (fonteGrande: boolean) => Promise<void>;
 };
 
 const CHAVE_TEMA = "confere.tema";
-const CHAVE_FONTE_GRANDE = "confere.fonteGrande";
 const ESCALA_FONTE_GRANDE = 1.25;
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
@@ -51,33 +49,24 @@ function resolverTema(
 
 export function ThemeProvider({ children }: PropsWithChildren) {
   const esquemaDoSistema = useColorScheme();
+  const { fonteGrande } = usePreferencias();
   const [preferencia, setPreferencia] = useState<PreferenciaTema>("sistema");
-  const [fonteGrande, setFonteGrande] = useState(false);
 
   useEffect(() => {
-    AsyncStorage.multiGet([CHAVE_TEMA, CHAVE_FONTE_GRANDE]).then(
-      ([[, temaSalvo], [, fonteSalva]]) => {
-        if (
-          temaSalvo === "claro" ||
-          temaSalvo === "escuro" ||
-          temaSalvo === "sistema"
-        ) {
-          setPreferencia(temaSalvo);
-        }
-
-        setFonteGrande(fonteSalva === "S");
+    AsyncStorage.getItem(CHAVE_TEMA).then((temaSalvo) => {
+      if (
+        temaSalvo === "claro" ||
+        temaSalvo === "escuro" ||
+        temaSalvo === "sistema"
+      ) {
+        setPreferencia(temaSalvo);
       }
-    );
+    });
   }, []);
 
   async function alterarPreferencia(novaPreferencia: PreferenciaTema) {
     setPreferencia(novaPreferencia);
     await AsyncStorage.setItem(CHAVE_TEMA, novaPreferencia);
-  }
-
-  async function alterarFonteGrande(novaFonteGrande: boolean) {
-    setFonteGrande(novaFonteGrande);
-    await AsyncStorage.setItem(CHAVE_FONTE_GRANDE, novaFonteGrande ? "S" : "N");
   }
 
   const tema = resolverTema(preferencia, esquemaDoSistema);
@@ -99,10 +88,8 @@ export function ThemeProvider({ children }: PropsWithChildren) {
         colors,
         tema,
         preferencia,
-        fonteGrande,
         tamanho,
         alterarPreferencia,
-        alterarFonteGrande,
       }}
     >
       {children}
