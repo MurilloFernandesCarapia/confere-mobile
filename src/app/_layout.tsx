@@ -9,6 +9,10 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { arquivosDasFontes } from "@/constants/Fonts";
 import { AuthProvider, useAuth } from "@/providers/AuthProvider";
+import {
+  PreferenciasProvider,
+  usePreferencias,
+} from "@/providers/PreferenciasProvider";
 import { ThemeProvider, useTheme } from "@/providers/ThemeProvider";
 
 SplashScreen.preventAutoHideAsync();
@@ -22,10 +26,11 @@ const queryClient = new QueryClient({
 });
 
 function AppNavigator() {
-  const { isLoading } = useAuth();
+  const { usuario, isLoading } = useAuth();
+  const preferencias = usePreferencias();
   const { colors, tema } = useTheme();
 
-  if (isLoading) {
+  if (isLoading || preferencias.isLoading) {
     return (
       <View
         style={{
@@ -50,7 +55,17 @@ function AppNavigator() {
             backgroundColor: colors.background,
           },
         }}
-      />
+      >
+        <Stack.Screen name="index" />
+
+        <Stack.Protected guard={usuario === null}>
+          <Stack.Screen name="(auth)" />
+        </Stack.Protected>
+
+        <Stack.Protected guard={usuario !== null}>
+          <Stack.Screen name="(tabs)" />
+        </Stack.Protected>
+      </Stack>
     </>
   );
 }
@@ -70,13 +85,15 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <AuthProvider>
-          <SafeAreaProvider>
-            <AppNavigator />
-          </SafeAreaProvider>
-        </AuthProvider>
-      </ThemeProvider>
+      <PreferenciasProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <SafeAreaProvider>
+              <AppNavigator />
+            </SafeAreaProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </PreferenciasProvider>
     </QueryClientProvider>
   );
 }
