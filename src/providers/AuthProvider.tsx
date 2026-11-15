@@ -10,8 +10,10 @@ import {
 
 import { definirAccessToken, definirAoExpirarSessao } from "@/lib/api";
 import { lerSessao, removerSessao, salvarSessao } from "@/lib/sessao";
+import { usePreferencias } from "@/providers/PreferenciasProvider";
 import type { UsuarioApi } from "@/schemas/api/auth.api.schema";
 import { login } from "@/services/auth";
+import { atualizarAcessibilidade } from "@/services/usuarios";
 
 type AuthContextValue = {
   usuario: UsuarioApi | null;
@@ -24,6 +26,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: PropsWithChildren) {
   const queryClient = useQueryClient();
+  const preferencias = usePreferencias();
   const [usuario, setUsuario] = useState<UsuarioApi | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -58,6 +61,22 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
     await salvarSessao(sessao);
     definirAccessToken(sessao.token);
+
+    const fonteGrande = sessao.usuario.fonteGrande || preferencias.fonteGrande;
+    const audioAtivo = sessao.usuario.audioAtivo || preferencias.audioAtivo;
+
+    await preferencias.alterarFonteGrande(fonteGrande);
+    await preferencias.alterarAudioAtivo(audioAtivo);
+
+    if (
+      fonteGrande !== sessao.usuario.fonteGrande ||
+      audioAtivo !== sessao.usuario.audioAtivo
+    ) {
+      atualizarAcessibilidade({ fonteGrande, audioAtivo }).catch(
+        () => undefined
+      );
+    }
+
     setUsuario(sessao.usuario);
   }
 

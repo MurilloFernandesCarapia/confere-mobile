@@ -1,8 +1,11 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { Finalidade, registrarConsentimento } from "@/services/consentimentos";
+import type { Finalidade } from "@/schemas/api/consentimento.api.schema";
+import { registrarConsentimento } from "@/services/consentimentos";
 
 export function useConsentimentoMutation() {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: ({
       finalidade,
@@ -11,5 +14,8 @@ export function useConsentimentoMutation() {
       finalidade: Finalidade;
       aceito: boolean;
     }) => registrarConsentimento(finalidade, aceito),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["consentimentos"] });
+    },
   });
 }
