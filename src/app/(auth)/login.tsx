@@ -56,7 +56,13 @@ const LoginScreen = () => {
           <SignInForm
             handleSignIn={handleSignIn}
             isPending={isPending}
-            errorMessage={isError ? traduzirErro(error) : null}
+            errorMessage={
+              isError
+                ? traduzirErro(error, {
+                    NAO_AUTENTICADO: "E-mail ou senha incorretos.",
+                  })
+                : null
+            }
           />
 
           <View style={styles.rodape}>
