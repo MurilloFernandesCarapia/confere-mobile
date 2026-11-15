@@ -1,5 +1,10 @@
 import { javaApi } from "@/lib/api";
-import { verificacaoApiSchema } from "@/schemas/api/verificacao.api.schema";
+import { paginaApiSchema } from "@/schemas/api/pagina.api.schema";
+import {
+  Desfecho,
+  Veredito,
+  verificacaoApiSchema,
+} from "@/schemas/api/verificacao.api.schema";
 
 export type ImagemDaVerificacao = {
   uri: string;
@@ -57,4 +62,33 @@ export async function getVerificacao(id: number) {
   const response = await javaApi.get(`/verificacoes/${id}`);
 
   return verificacaoApiSchema.parse(response.data);
+}
+
+export async function getVerificacoes(
+  pagina: number,
+  veredito: Veredito | null
+) {
+  const response = await javaApi.get("/verificacoes", {
+    params: {
+      pagina,
+      tamanho: 10,
+      veredito: veredito ?? undefined,
+    },
+  });
+
+  return paginaApiSchema(verificacaoApiSchema).parse(response.data);
+}
+
+export async function deleteVerificacao(id: number) {
+  await javaApi.delete(`/verificacoes/${id}`);
+}
+
+export type NovoFeedback = {
+  foiUtil: boolean;
+  desfecho: Desfecho | null;
+  valorEvitado: number | null;
+};
+
+export async function salvarFeedback(id: number, feedback: NovoFeedback) {
+  await javaApi.put(`/verificacoes/${id}/feedback`, feedback);
 }

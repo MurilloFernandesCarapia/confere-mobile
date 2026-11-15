@@ -28,6 +28,21 @@ export const fonteApiSchema = z.object({
   url: z.string(),
 });
 
+export const desfechoSchema = z.enum([
+  "NAO_PAGUEI",
+  "PAGUEI",
+  "BLOQUEEI",
+  "DENUNCIEI",
+  "PEDI_BENEFICIO",
+  "OUTRO",
+]);
+
+export const feedbackApiSchema = z.object({
+  foiUtil: z.boolean(),
+  desfecho: desfechoSchema.nullish(),
+  valorEvitado: z.number().nullish(),
+});
+
 export const verificacaoApiSchema = z.object({
   id: z.number(),
   veredito: vereditoSchema.nullish(),
@@ -40,6 +55,7 @@ export const verificacaoApiSchema = z.object({
   sinais: z.array(sinalApiSchema).default([]),
   fontes: z.array(fonteApiSchema).default([]),
   guardioesAvisados: z.number().nullish(),
+  feedback: feedbackApiSchema.nullish(),
   criadoEm: z.string(),
 });
 
@@ -50,5 +66,9 @@ export type CanalApi = z.infer<typeof canalApiSchema>;
 export type SinalApi = z.infer<typeof sinalApiSchema>;
 
 export type FonteApi = z.infer<typeof fonteApiSchema>;
+
+export type Desfecho = z.infer<typeof desfechoSchema>;
+
+export type FeedbackApi = z.infer<typeof feedbackApiSchema>;
 
 export type VerificacaoApi = z.infer<typeof verificacaoApiSchema>;

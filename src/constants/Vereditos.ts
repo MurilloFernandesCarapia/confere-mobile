@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { ComponentProps } from "react";
 
 import type { AppColors } from "@/constants/Colors";
-import type { Veredito } from "@/schemas/api/verificacao.api.schema";
+import type { Desfecho, Veredito } from "@/schemas/api/verificacao.api.schema";
 
 type InfoVeredito = {
   rotulo: string;
@@ -59,4 +59,13 @@ export const SINAIS: Record<string, string> = {
   VALOR_DINHEIRO: "Fala de dinheiro",
   REMETENTE_DESCONHECIDO: "Remetente desconhecido",
   ORGAO_OFICIAL_CITADO: "Usa o nome de um órgão oficial",
+};
+
+export const DESFECHOS: Record<Desfecho, string> = {
+  NAO_PAGUEI: "Não paguei nada",
+  PAGUEI: "Infelizmente paguei",
+  BLOQUEEI: "Bloqueei o contato",
+  DENUNCIEI: "Denunciei",
+  PEDI_BENEFICIO: "Pedi o benefício",
+  OUTRO: "Outra coisa",
 };

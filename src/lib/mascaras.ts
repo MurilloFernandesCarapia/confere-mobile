@@ -33,3 +33,22 @@ export function aplicarMascaraData(valor: string) {
 
   return digitos;
 }
+
+export function aplicarMascaraMoeda(valor: string) {
+  const centavos = Number(somenteDigitos(valor).slice(0, 10));
+
+  if (centavos === 0) {
+    return "";
+  }
+
+  return (centavos / 100).toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  });
+}
+
+export function converterMoedaParaNumero(valor: string) {
+  const digitos = somenteDigitos(valor);
+
+  return digitos === "" ? null : Number(digitos) / 100;
+}
