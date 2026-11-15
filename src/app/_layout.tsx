@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import { arquivosDasFontes } from "@/constants/Fonts";
+import { arquivosDasFontes, Fonts } from "@/constants/Fonts";
 import { AuthProvider, useAuth } from "@/providers/AuthProvider";
 import {
   PreferenciasProvider,
@@ -28,7 +28,7 @@ const queryClient = new QueryClient({
 function AppNavigator() {
   const { usuario, isLoading } = useAuth();
   const preferencias = usePreferencias();
-  const { colors, tema } = useTheme();
+  const { colors, tema, tamanho } = useTheme();
 
   if (isLoading || preferencias.isLoading) {
     return (
@@ -54,6 +54,15 @@ function AppNavigator() {
           contentStyle: {
             backgroundColor: colors.background,
           },
+          headerStyle: {
+            backgroundColor: colors.primary,
+          },
+          headerShadowVisible: false,
+          headerTintColor: colors.textOnPrimary,
+          headerTitleStyle: {
+            fontFamily: Fonts.extraBold,
+            fontSize: tamanho(20),
+          },
         }}
       >
         <Stack.Screen name="index" />
@@ -64,6 +73,14 @@ function AppNavigator() {
 
         <Stack.Protected guard={usuario !== null}>
           <Stack.Screen name="(tabs)" />
+          <Stack.Screen
+            name="conferir"
+            options={{ headerShown: true, title: "Conferir mensagem" }}
+          />
+          <Stack.Screen
+            name="verificacao/[id]"
+            options={{ headerShown: true, title: "Resultado" }}
+          />
         </Stack.Protected>
       </Stack>
     </>
