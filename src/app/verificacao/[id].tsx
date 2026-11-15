@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 
+import FeedbackForm from "@/components/FeedbackForm";
 import FontesOficiais from "@/components/FontesOficiais";
 import SemaforoVeredito from "@/components/SemaforoVeredito";
 import SinaisDetectados from "@/components/SinaisDetectados";
@@ -16,12 +17,15 @@ import Aviso from "@/components/ui/Aviso";
 import Botao from "@/components/ui/Botao";
 import type { AppColors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
+import { useFeedbackMutation } from "@/hooks/useFeedbackMutation";
 import { useLeitorDeTexto } from "@/hooks/useLeitorDeTexto";
 import { useThemedStyles } from "@/hooks/useThemedStyles";
 import { useVerificacaoQuery } from "@/hooks/useVerificacaoQuery";
 import { traduzirErro } from "@/lib/erros";
+import { converterMoedaParaNumero } from "@/lib/mascaras";
 import { usePreferencias } from "@/providers/PreferenciasProvider";
 import { Tamanho, useTheme } from "@/providers/ThemeProvider";
+import { FeedbackFormData } from "@/schemas/forms/feedback.form.schema";
 
 const ResultadoScreen = () => {
   const { colors } = useTheme();
@@ -34,6 +38,7 @@ const ResultadoScreen = () => {
   const { data, isLoading, isError, error, refetch } = useVerificacaoQuery(
     Number(id)
   );
+  const feedback = useFeedbackMutation(Number(id));
 
   const textoParaOuvir = data?.roteiroAudio ?? data?.frases.join(" ") ?? "";
 
@@ -43,6 +48,18 @@ const ResultadoScreen = () => {
       falar(textoParaOuvir);
     }
   }, [audioAtivo, textoParaOuvir, falar]);
+
+  function handleSalvarFeedback({
+    foiUtil,
+    desfecho,
+    valorEvitado,
+  }: FeedbackFormData) {
+    feedback.mutate({
+      foiUtil: foiUtil === "SIM",
+      desfecho,
+      valorEvitado: converterMoedaParaNumero(valorEvitado),
+    });
+  }
 
   if (isLoading) {
     return (
@@ -122,6 +139,19 @@ const ResultadoScreen = () => {
       <SinaisDetectados sinais={data.sinais} />
 
       <FontesOficiais fontes={data.fontes} />
+
+      {data.veredito && (
+        <FeedbackForm
+          feedbackAtual={data.feedback}
+          mostrarValorEvitado={
+            data.veredito === "GOLPE" || data.veredito === "SUSPEITO"
+          }
+          handleSalvar={handleSalvarFeedback}
+          isPending={feedback.isPending}
+          isSuccess={feedback.isSuccess}
+          errorMessage={feedback.isError ? traduzirErro(feedback.error) : null}
+        />
+      )}
 
       <Botao
         titulo="Conferir outra mensagem"
