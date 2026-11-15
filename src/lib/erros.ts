@@ -35,6 +35,14 @@ export function ehErroDeConexao(error: unknown) {
   return isAxiosError(error) && error.response === undefined;
 }
 
+export function codigoDoErro(error: unknown) {
+  if (!isAxiosError(error)) {
+    return undefined;
+  }
+
+  return (error.response?.data as ProblemDetails | undefined)?.codigo;
+}
+
 export function traduzirErro(
   error: unknown,
   mensagensDaTela: Record<string, string> = {}
