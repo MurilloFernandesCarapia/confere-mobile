@@ -66,6 +66,10 @@ function AppNavigator() {
         }}
       >
         <Stack.Screen name="index" />
+        <Stack.Screen
+          name="sobre"
+          options={{ headerShown: true, title: "Sobre o app" }}
+        />
 
         <Stack.Protected guard={usuario === null}>
           <Stack.Screen name="(auth)" />
