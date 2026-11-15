@@ -54,6 +54,21 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="historico"
+        options={{
+          title: "Meu histórico",
+          tabBarLabel: "Histórico",
+          tabBarAccessibilityLabel: "Histórico",
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name={focused ? "time" : "time-outline"}
+              size={24}
+              color={focused ? colors.link : colors.textSecondary}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="perfil"
         options={{
           title: "Meu perfil",
