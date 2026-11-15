@@ -10,14 +10,13 @@ import {
 
 import { definirAccessToken, definirAoExpirarSessao } from "@/lib/api";
 import { lerSessao, removerSessao, salvarSessao } from "@/lib/sessao";
-import type { RegistroApi, UsuarioApi } from "@/schemas/api/auth.api.schema";
-import { login, registrarUsuario } from "@/services/auth";
+import type { UsuarioApi } from "@/schemas/api/auth.api.schema";
+import { login } from "@/services/auth";
 
 type AuthContextValue = {
   usuario: UsuarioApi | null;
   isLoading: boolean;
   signIn: (email: string, senha: string) => Promise<void>;
-  signUp: (dados: RegistroApi) => Promise<void>;
   signOut: () => Promise<void>;
 };
 
@@ -62,21 +61,12 @@ export function AuthProvider({ children }: PropsWithChildren) {
     setUsuario(sessao.usuario);
   }
 
-  async function signUp(dados: RegistroApi) {
-    await registrarUsuario({
-      ...dados,
-      email: dados.email.trim().toLowerCase(),
-    });
-    await signIn(dados.email, dados.senha);
-  }
-
   return (
     <AuthContext.Provider
       value={{
         usuario,
         isLoading,
         signIn,
-        signUp,
         signOut,
       }}
     >

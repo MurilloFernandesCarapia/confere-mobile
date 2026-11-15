@@ -1,5 +1,7 @@
+import { router, useLocalSearchParams } from "expo-router";
 import {
   KeyboardAvoidingView,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,6 +11,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import Logo from "@/components/Logo";
 import SignInForm from "@/components/SignInForm";
+import Aviso from "@/components/ui/Aviso";
 import type { AppColors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { useLoginMutation } from "@/hooks/useLoginMutation";
@@ -19,6 +22,7 @@ import { SignInFormData } from "@/schemas/forms/signIn.form.schema";
 
 const LoginScreen = () => {
   const styles = useThemedStyles(criarEstilos);
+  const { cadastrado } = useLocalSearchParams<{ cadastrado?: string }>();
   const { mutate, isError, error, isPending } = useLoginMutation();
 
   function handleSignIn(data: SignInFormData) {
@@ -40,11 +44,32 @@ const LoginScreen = () => {
             </Text>
           </View>
 
+          {cadastrado === "1" && !isError && (
+            <View style={styles.aviso}>
+              <Aviso
+                tipo="sucesso"
+                mensagem="Conta criada! Agora entre com o seu e-mail e a sua senha."
+              />
+            </View>
+          )}
+
           <SignInForm
             handleSignIn={handleSignIn}
             isPending={isPending}
             errorMessage={isError ? traduzirErro(error) : null}
           />
+
+          <View style={styles.rodape}>
+            <Text style={styles.rodapeTexto}>Ainda não tem conta?</Text>
+            <Pressable
+              accessibilityRole="link"
+              accessibilityLabel="Criar uma conta"
+              style={styles.rodapeBotao}
+              onPress={() => router.push("/cadastro")}
+            >
+              <Text style={styles.rodapeLink}>Criar conta</Text>
+            </Pressable>
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -77,6 +102,31 @@ const criarEstilos = (colors: AppColors, tamanho: Tamanho) =>
       fontSize: tamanho(17),
       color: colors.textSecondary,
       textAlign: "center",
+    },
+    aviso: {
+      marginBottom: 16,
+    },
+    rodape: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      flexWrap: "wrap",
+      marginTop: 24,
+    },
+    rodapeTexto: {
+      fontFamily: Fonts.regular,
+      fontSize: tamanho(16),
+      color: colors.textSecondary,
+    },
+    rodapeBotao: {
+      minHeight: 48,
+      justifyContent: "center",
+      paddingHorizontal: 8,
+    },
+    rodapeLink: {
+      fontFamily: Fonts.extraBold,
+      fontSize: tamanho(16),
+      color: colors.link,
     },
   });
 

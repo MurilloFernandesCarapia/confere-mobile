@@ -35,7 +35,10 @@ export function ehErroDeConexao(error: unknown) {
   return isAxiosError(error) && error.response === undefined;
 }
 
-export function traduzirErro(error: unknown) {
+export function traduzirErro(
+  error: unknown,
+  mensagensDaTela: Record<string, string> = {}
+) {
   if (!isAxiosError(error)) {
     return "Não foi possível concluir. Tente de novo.";
   }
@@ -55,8 +58,13 @@ export function traduzirErro(error: unknown) {
     );
   }
 
-  if (problema.codigo !== undefined && mensagensPorCodigo[problema.codigo]) {
-    return mensagensPorCodigo[problema.codigo];
+  if (problema.codigo !== undefined) {
+    const mensagem =
+      mensagensDaTela[problema.codigo] ?? mensagensPorCodigo[problema.codigo];
+
+    if (mensagem !== undefined) {
+      return mensagem;
+    }
   }
 
   if (status === 401) {
