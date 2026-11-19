@@ -32,7 +32,7 @@ const ResultadoScreen = () => {
   const styles = useThemedStyles(criarEstilos);
   const { id } = useLocalSearchParams<{ id: string }>();
   const { audioAtivo } = usePreferencias();
-  const { falando, falar, parar } = useLeitorDeTexto();
+  const { falando, semVoz, falar, parar } = useLeitorDeTexto();
   const jaLeu = useRef(false);
 
   const { data, isLoading, isError, error, refetch } = useVerificacaoQuery(
@@ -103,6 +103,13 @@ const ResultadoScreen = () => {
           icone={falando ? "stop-circle-outline" : "volume-high-outline"}
           variante="contorno"
           onPress={() => (falando ? parar() : falar(textoParaOuvir))}
+        />
+      )}
+
+      {semVoz && (
+        <Aviso
+          tipo="erro"
+          mensagem="O celular não conseguiu ler em voz alta. Confira se o volume de mídia está ligado e se existe uma voz em português em Configurações > Acessibilidade > Saída de texto para fala."
         />
       )}
 
