@@ -1,5 +1,6 @@
 import * as SecureStore from "expo-secure-store";
 
+import { converterIsoParaData } from "@/lib/datas";
 import type { SessaoApi } from "@/schemas/api/auth.api.schema";
 
 const CHAVE_SESSAO = "confere.sessao";
@@ -21,7 +22,7 @@ export async function lerSessao(): Promise<SessaoApi | null> {
 
   const sessao = JSON.parse(valor) as SessaoApi;
 
-  if (new Date(sessao.expiraEm) <= new Date()) {
+  if (converterIsoParaData(sessao.expiraEm) <= new Date()) {
     await removerSessao();
     return null;
   }

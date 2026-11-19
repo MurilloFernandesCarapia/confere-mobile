@@ -30,9 +30,10 @@ export async function criarVerificacao({
   if (imagem !== null) {
     const formData = new FormData();
 
-    formData.append("tipoEntrada", "IMAGEM");
-    formData.append("canal", canal);
-    formData.append("modo", "ONLINE");
+    formData.append(
+      "dados",
+      JSON.stringify({ tipoEntrada: "IMAGEM", canal, modo: "ONLINE" })
+    );
     formData.append("imagem", {
       uri: imagem.uri,
       name: imagem.nome,

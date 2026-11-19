@@ -34,8 +34,12 @@ export function calcularIdade(dataBrasileira: string) {
   return idade;
 }
 
+export function converterIsoParaData(dataIso: string) {
+  return new Date(dataIso.replace(/(\.\d{3})\d+/, "$1"));
+}
+
 export function formatarDataHora(dataIso: string) {
-  const data = new Date(dataIso);
+  const data = converterIsoParaData(dataIso);
   const dia = data.toLocaleDateString("pt-BR");
   const hora = data.toLocaleTimeString("pt-BR", {
     hour: "2-digit",
