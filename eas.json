@@ -10,10 +10,18 @@
       "autoIncrement": true,
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_JAVA_API_URL": "https://confere-java-rm564969.azurewebsites.net",
+        "EXPO_PUBLIC_DOTNET_API_URL": "https://confere-rm564969.azurewebsites.net"
       }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_JAVA_API_URL": "https://confere-java-rm564969.azurewebsites.net",
+        "EXPO_PUBLIC_DOTNET_API_URL": "https://confere-rm564969.azurewebsites.net"
+      }
     }
   }
 }

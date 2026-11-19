@@ -19,7 +19,7 @@ export function definirAoExpirarSessao(callback: (() => void) | null) {
 function criarCliente(baseURL: string): AxiosInstance {
   const cliente = create({
     baseURL,
-    timeout: 30000,
+    timeout: 60000,
     headers: {
       "Content-Type": "application/json",
     },
