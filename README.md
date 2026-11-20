@@ -5,6 +5,8 @@
 Aplicativo React Native que ajuda o cidadão, principalmente o idoso, a descobrir se uma mensagem recebida por WhatsApp, SMS, e-mail ou ligação é golpe ou oficial antes de clicar, pagar ou desistir de um direito. Integrado à API Java do Confere (autenticação e verificações) e à API .NET (alertas regionais), as duas publicadas na Azure, e distribuído pelo Firebase App Distribution.
  
 ## 🎥 Vídeo de apresentação
+
+*https://youtu.be/lqc-IkzOcis*
  
  
 O vídeo mostra o aplicativo publicado no Firebase App Distribution com o professor como testador, a instalação pelo convite por e-mail e o fluxo completo: cadastro, login, conferência de mensagem, resultado com leitura em voz alta, feedback, histórico com filtro e exclusão, perfil com tema e LGPD, e a tela Sobre o App com o commit de referência.
